@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import time
 import tqdm
-from model import ChessResNet
+from model import ChessResNet, ChessModel
 import torch.nn as nn
 from preprocessing import preprocess_data, ChessDataset
 from torch.utils.data import DataLoader
@@ -130,8 +130,21 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False)
 
     # Initialize model
-    model = ChessResNet(num_res_blocks=args.model_size, num_moves=1917)
+    #model = ChessResNet(num_res_blocks=args.model_size, num_moves=1917)
+    model = ChessModel(num_classes=1917)
+
     print("Model initialized.")
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    criterion = nn.CrossEntropyLoss()
+    for inputs, labels in train_loader:
+        inputs, labels = inputs.to(device), labels.to(device)
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        print(total_norm)
+        break
 
     # Train the model
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
