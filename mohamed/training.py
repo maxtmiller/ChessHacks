@@ -11,6 +11,8 @@ from torch.utils.data import DataLoader
 import argparse
 from huggingface_hub import hf_hub_download
 
+torch.set_float32_matmul_precision('high')
+
 
 def topk_accuracy(output, target, k=3):
     """Compute top-k accuracy"""
@@ -97,6 +99,7 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", type=int, default=64, help="Batch size for training")
     parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
     parser.add_argument("--model_size", type=int, default=4, help="Number of residual blocks in the model")
+    parser.add_argument("--pretrained", type=str, help="Use pretrained model weights", default=None)
     args = parser.parse_args()
 
     X_path = hf_hub_download(
@@ -131,6 +134,10 @@ if __name__ == "__main__":
 
     # Initialize model
     model = ChessResNet(num_res_blocks=args.model_size, num_moves=1917)
+
+    if args.pretrained:
+        model.load_state_dict(torch.load(args.pretrained))
+
     #model = ChessModel(num_classes=1917)
 
     print("Model initialized.")
