@@ -4,7 +4,7 @@ import csv
 import os
 from tqdm import tqdm
 
-INPUT_FOLDER = "/Users/maxmiller/Documents/GitHub/ChessHacks/training_data" 
+INPUT_FOLDER = "/training_data" 
 OUTPUT_CSV = "training_data.csv"
 
 def extract_from_all_pgns(folder, out_csv):

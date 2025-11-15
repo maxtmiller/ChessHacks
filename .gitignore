@@ -1,2 +1,8 @@
-/training_data
-training_data.csv
+__pycache__
+.venv
+venv
+.env.local
+.env
+devtools
+/training/training_data
+/training/training_data.csv
