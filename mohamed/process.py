@@ -10,5 +10,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     files = [os.path.join(args.data_dir, f) for f in os.listdir(args.data_dir)]
     x, y, num_classes, move_to_int = preprocess_data(files)
-    torch.save(x, "data/X.pt")
-    torch.save(y, "data/y.pt")
+    torch.save(x, "X.pt")
+    torch.save(y, "y.pt")
