@@ -12,10 +12,10 @@ import pickle
 
 engine = chess.engine.SimpleEngine.popen_uci("/Users/maxmiller/Documents/GitHub/ChessHacks/model1")  
 
-model = ChessResNet(num_res_blocks=12, num_moves=1917)
-model.load_state_dict(torch.load("/Users/maxmiller/Documents/GitHub/ChessHacks/chess_resnet.pth"))
+model = ChessResNet(num_res_blocks=16, num_moves=1917)
+model.load_state_dict(torch.load("/Users/maxmiller/Documents/GitHub/ChessHacks/src/chess_resnet.pth"))
 model.eval()
-move_to_index = pickle.load(open("/Users/maxmiller/Documents/GitHub/ChessHacks/move_to_index.pkl", "rb"))
+move_to_index = pickle.load(open("/Users/maxmiller/Documents/GitHub/ChessHacks/src/move_to_index.pkl", "rb"))
 
 @chess_manager.entrypoint
 def test_func(ctx: GameContext):
