@@ -10,7 +10,7 @@ from preprocessing import preprocess_data, ChessDataset
 from torch.utils.data import DataLoader
 import argparse
 from huggingface_hub import hf_hub_download
-from torch.cuda.amp import autocast
+from torch import autocast
 
 torch.set_float32_matmul_precision('high')
 
@@ -61,7 +61,7 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
             with torch.no_grad():
                 for inputs, labels in val_loader:
                     inputs, labels = inputs.to(device), labels.to(device)
-                    with autocast(device_type="cuda", dtype=torch.bfloat16):
+                    with autocast(device_type="cuda", dev=torch.bfloat16):
                         outputs = model(inputs)
                     val_loss += criterion(outputs, labels).item()
 
