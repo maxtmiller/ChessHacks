@@ -10,6 +10,7 @@ from preprocessing import preprocess_data, ChessDataset
 from torch.utils.data import DataLoader
 import argparse
 from huggingface_hub import hf_hub_download
+from torch.cuda.amp import autocast
 
 torch.set_float32_matmul_precision('high')
 
@@ -40,8 +41,9 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
         for inputs, labels in tqdm.tqdm(train_loader, desc=f"Epoch {epoch+1}/{epochs}"):
             inputs, labels = inputs.to(device), labels.to(device)
             optimizer.zero_grad()
-            outputs = model(inputs)  # raw logits
-            loss = criterion(outputs, labels)
+            with autocast(device_type="cuda", dtype=torch.bfloat16):
+                outputs = model(inputs)  # raw logits
+                loss = criterion(outputs, labels)
             loss.backward()
             # Gradient clipping
             total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), grad_clip)
@@ -59,7 +61,8 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
             with torch.no_grad():
                 for inputs, labels in val_loader:
                     inputs, labels = inputs.to(device), labels.to(device)
-                    outputs = model(inputs)
+                    with autocast(device_type="cuda", dtype=torch.bfloat16):
+                        outputs = model(inputs)
                     val_loss += criterion(outputs, labels).item()
 
                     # Top-1 accuracy
