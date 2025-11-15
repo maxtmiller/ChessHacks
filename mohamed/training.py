@@ -25,6 +25,8 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
     """
     MLflow-ready training loop for supervised chess policy network
     """
+    model.train()
+    model = torch.compile(model, mode="reduce-overhead", fullgraph=True, backend="inductor")
     model.to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
