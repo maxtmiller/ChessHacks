@@ -3,6 +3,7 @@ __pycache__
 venv
 .env.local
 .env
-devtools
+/devtools/.next
+/devtools/node_modules
 /training/training_data
 /training/training_data.csv
