@@ -10,6 +10,7 @@ from preprocessing import preprocess_data, ChessDataset
 from torch.utils.data import DataLoader
 import os
 import pickle
+import argparse
 
 
 def topk_accuracy(output, target, k=3):
@@ -90,6 +91,11 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Train chess policy network")
+    parser.add_argument("--epochs", type=int, default=10, help="Number of training epochs")
+    parser.add_argument("--batch_size", type=int, default=64, help="Batch size for training")
+    args = parser.parse_args()
+
     X = torch.load("X.pt")
     y = torch.load("y.pt")
 
@@ -105,8 +111,8 @@ if __name__ == "__main__":
     train_dataset = ChessDataset(X_train, y_train)
     val_dataset = ChessDataset(X_val, y_val)
 
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False)
 
     # Initialize model
     model = ChessResNet(num_res_blocks=4, num_moves=1917)
@@ -114,6 +120,6 @@ if __name__ == "__main__":
 
     # Train the model
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    train(epochs=10, model=model, train_loader=train_loader, val_loader=val_loader, device=device)
+    train(epochs=args.epochs, model=model, train_loader=train_loader, val_loader=val_loader, device=device)
 
     torch.save(model.state_dict(), "model/chess_resnet.pth")
