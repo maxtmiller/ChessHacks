@@ -135,17 +135,6 @@ if __name__ == "__main__":
 
     print("Model initialized.")
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    criterion = nn.CrossEntropyLoss()
-    for inputs, labels in train_loader:
-        inputs, labels = inputs.to(device), labels.to(device)
-        outputs = model(inputs)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        print(total_norm)
-        break
-
     # Train the model
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train(epochs=args.epochs, model=model, train_loader=train_loader, val_loader=val_loader, device=device, lr=args.lr)
