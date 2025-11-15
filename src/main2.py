@@ -69,7 +69,7 @@ def test_func(ctx: GameContext):
     if not legal_moves_filtered:
         print("No legal moves found in move dictionary. Picking randomly.")
         best_move = random.choice(legal_moves)
-        ctx.logProbabilities({m: 1.0 if m == best_move else 1e-6 for m in legal_moves})
+        ctx.logProbabilities({m.uci(): 1.0 if m == best_move else 1e-6 for m in legal_moves}) # <-- FIX
         return best_move
 
     print(5)
@@ -79,11 +79,11 @@ def test_func(ctx: GameContext):
     if total_weight == 0:
         print("Model gave zero probability to all legal moves. Picking randomly.")
         best_move = random.choice(legal_moves_filtered)
-        ctx.logProbabilities({m: 1.0 if m == best_move else 1e-6 for m in legal_moves_filtered})
+        ctx.logProbabilities({m.uci(): 1.0 if m == best_move else 1e-6 for m in legal_moves_filtered}) # <-- FIX
         return best_move
 
     normalized_probs = {
-        move: weight / total_weight
+        move.uci(): weight / total_weight  # <-- FIX
         for move, weight in zip(legal_moves_filtered, move_weights)
     }
 
