@@ -41,7 +41,6 @@ class ChessResNet(nn.Module):
         policy = F.relu(self.policy_bn(self.policy_conv(out)))
         policy = policy.view(policy.size(0), -1)
         policy = self.policy_fc(policy)
-        policy = F.softmax(policy, dim=1)
         return policy
 
 

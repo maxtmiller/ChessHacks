@@ -130,8 +130,8 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False)
 
     # Initialize model
-    #model = ChessResNet(num_res_blocks=args.model_size, num_moves=1917)
-    model = ChessModel(num_classes=1917)
+    model = ChessResNet(num_res_blocks=args.model_size, num_moves=1917)
+    #model = ChessModel(num_classes=1917)
 
     print("Model initialized.")
 
