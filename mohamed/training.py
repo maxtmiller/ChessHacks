@@ -139,4 +139,4 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train(epochs=args.epochs, model=model, train_loader=train_loader, val_loader=val_loader, device=device, lr=args.lr)
 
-    torch.save(model.state_dict(), "model/chess_resnet.pth")
+    torch.save(model.state_dict(), "chess_resnet.pth")
