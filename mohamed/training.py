@@ -90,8 +90,8 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
 
 
 if __name__ == "__main__":
-    files = [os.path.join("data", f) for f in os.listdir("data/")]
-    X, y, num_classes, move_to_int = preprocess_data(files)
+    X = torch.load("X.pt")
+    y = torch.load("y.pt")
 
     train_size = int(0.8 * len(X))
     val_size = len(X) - train_size
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
 
     # Initialize model
-    model = ChessResNet(num_res_blocks=4, num_moves=num_classes)
+    model = ChessResNet(num_res_blocks=4, num_moves=1917)
     print("Model initialized.")
 
     # Train the model
