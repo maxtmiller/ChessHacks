@@ -24,7 +24,7 @@ model.load_state_dict(state_dict)
 
 
 model.to(DEVICE)
-model.half()
+# model.half()
 model.eval()
 
 move_to_index = pickle.load(open("./move_to_int.pkl", "rb"))
@@ -37,7 +37,7 @@ def evaluate_board(board, model):
     (Assuming your model is trained to always predict White's score)
     """
     mat = board_to_matrix(board)
-    inp = torch.tensor(mat, dtype=torch.float16).unsqueeze(0).to(DEVICE)
+    inp = torch.tensor(mat, dtype=torch.float32).unsqueeze(0).to(DEVICE)
 
     with torch.no_grad():
         # Your model returns TWO things. We only need the second one.
