@@ -14,7 +14,7 @@ app = FastAPI()
 
 @app.post("/")
 async def root():
-    return JSONResponse(content={"running": True})
+    return JSONResponse(content={"running": True}) 
 
 
 @app.post("/move")
