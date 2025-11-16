@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader
 import argparse
 from huggingface_hub import hf_hub_download
 from torch import autocast
+from torch.optim.lr_scheduler import CosineAnnealingLR
 
 torch.set_float32_matmul_precision('high')
 
@@ -32,6 +33,7 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
     model.to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
+    scheduler = CosineAnnealingLR(optimizer, T_max=epochs)
 
     for epoch in range(epochs):
         start_time = time.time()
@@ -89,6 +91,8 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
                   f"Val Acc: {val_accuracy:.2f}% | "
                   f"Top-3 Val Acc: {top3_val_acc:.2f}% | "
                   f"Grad Norm: {total_norm:.4f}")
+            
+        scheduler.step()
 
         # Epoch time
         epoch_time = time.time() - start_time
@@ -106,13 +110,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     X_path = hf_hub_download(
-        repo_id="Maynx/Xy",
+        repo_id="Maynx/Xy2",
         filename="X.pt",
         repo_type="dataset"
     )
 
     y_path = hf_hub_download(
-        repo_id="Maynx/Xy",
+        repo_id="Maynx/Xy2",
         filename="y.pt",
         repo_type="dataset"
     )
