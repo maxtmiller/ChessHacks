@@ -135,6 +135,8 @@ if __name__ == "__main__":
     y = torch.load(y_path)
     y_value = torch.load(y_value_path)
 
+    X = X.to(torch.float32)
+
     train_size = int(0.8 * len(X))
     val_size = len(X) - train_size
     X_train = X[:train_size]
