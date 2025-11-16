@@ -22,6 +22,7 @@ state_dict = torch.load(
 )
 
 model.load_state_dict(state_dict)
+model.to(DEVICE)
 model.eval()
 
 move_to_index = pickle.load(open("./move_to_int.pkl", "rb"))
