@@ -7,9 +7,9 @@ import chess
 import os
 
 from src.utils import chess_manager
-from src import main2
+from src import main
 
-app = FastAPI()
+app = FastAPI() 
 
 
 @app.post("/")
@@ -51,7 +51,7 @@ async def get_move(request: Request):
             },
             status_code=500,
         )
-
+ 
     # Confirm type of move_probs
     if not isinstance(move_probs, dict):
         return JSONResponse(content={"move": None, "move_probs": None, "error": "Failed to get move", "message": "Move probabilities is not a dictionary"}, status_code=500)
