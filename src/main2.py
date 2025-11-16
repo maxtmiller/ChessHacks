@@ -94,7 +94,7 @@ def test_func(ctx: GameContext):
     )[0]
 
     print(f"Chosen move: {best_move}")
-    return best_move
+    return best_move.uci()
 
 """
 @chess_manager.entrypoint
