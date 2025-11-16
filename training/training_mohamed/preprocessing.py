@@ -44,29 +44,44 @@ def board_to_matrix(board: Board):
 
 def create_input_for_nn(games):
     X = []
-    y = []
+    y_policy = []
+    y_value = []
     for game in tqdm.tqdm(games):
         board = game.board()
         for move in game.mainline_moves():
             X.append(board_to_matrix(board))
-            y.append(move.uci())
+            y_policy.append(move.uci())
+            y_value.append(result_to_value(game, board))
             board.push(move)
-    return np.array(X, dtype=np.float32), np.array(y)
+    return np.array(X, dtype=np.float32), np.array(y_policy), np.array(y_value, dtype=np.float32)
 
 def encode_moves(moves):
     move_to_int = {move: idx for idx, move in enumerate(set(moves))}
     return np.array([move_to_int[move] for move in moves], dtype=np.float32), move_to_int
 
+def result_to_value(game, board):
+    result = game.headers["Result"]
+    if result == "1-0":
+        winner = chess.WHITE
+    elif result == "0-1":
+        winner = chess.BLACK
+    else:
+        return 0.0  # draw
+
+    # value should be from POV of current player
+    return 1.0 if board.turn == winner else -1.0
+
 def preprocess_data(dataset):
     games = []
     for pgn_file in tqdm.tqdm(dataset):
         games.extend(load_pgn(pgn_file))
-    X, y_moves = create_input_for_nn(games)
-    y, move_to_int = encode_moves(y_moves)
+    X, y_moves_policy, y_value = create_input_for_nn(games)
+    y, move_to_int = encode_moves(y_moves_policy)
     num_classes = len(move_to_int)
     X = torch.tensor(X, dtype=torch.float32)
     y = torch.tensor(y, dtype=torch.long)
-    return X, y, num_classes, move_to_int
+    y_value = torch.tensor(y_value, dtype=torch.float32)
+    return X, y, y_value, num_classes, move_to_int
 
 class ChessDataset(torch.utils.data.Dataset):
     def __init__(self, X, y):
