@@ -14,10 +14,10 @@ import math # Needed for math.exp or using torch.exp
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-model = ChessResNet(num_res_blocks=40, num_moves=1917)
+model = ChessResNet(num_res_blocks=15, num_moves=1917)
 
 state_dict = torch.load(
-    "./models/chess_resnet_40.pth",
+    "./models/chess_resnet_100K_15.pth",
     map_location=torch.device('cpu')
 )
 

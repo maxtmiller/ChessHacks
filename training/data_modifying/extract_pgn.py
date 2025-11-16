@@ -28,4 +28,4 @@ def extract_n_games(in_path, out_path, n_games):
 
 if __name__ == "__main__":
     # Example:
-    extract_n_games("./training/training_data/lichess_elite_2025-01.pgn", "first_100000.pgn", n_games=100000)
+    extract_n_games("../training_data/lichess_elite_2025-01.pgn", "200000.pgn", n_games=200000)
