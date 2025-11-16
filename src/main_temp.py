@@ -27,7 +27,7 @@ model.eval()
 move_to_index = pickle.load(open("/Users/maxmiller/Documents/GitHub/ChessHacks/src/move_to_int.pkl", "rb"))
 
 # --- New Constant for Temperature Sampling ---
-TEMPERATURE = 0.8
+TEMPERATURE = 1.75
 # ---
 
 @chess_manager.entrypoint
