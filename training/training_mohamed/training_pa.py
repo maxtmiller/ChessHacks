@@ -24,7 +24,7 @@ def topk_accuracy(output, target, k=3):
         correct = (topk == target_expanded).any(dim=1).float().sum()
         return 100 * correct / target.size(0)
 
-def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1e-4, grad_clip=1.0):
+def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1e-4, grad_clip=5.0):
     """
     MLflow-ready training loop for supervised chess policy network
     """
@@ -43,11 +43,10 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
         for inputs, labels, values in tqdm.tqdm(train_loader, desc=f"Epoch {epoch+1}/{epochs}"):
             inputs, labels, values = inputs.to(device), labels.to(device), values.to(device)
             optimizer.zero_grad()
-            with autocast(device_type="cuda", dtype=torch.float16):
-                outputs, value_pred = model(inputs)  # raw logits
-                policy_loss = criterion(outputs, labels)
-                value_loss = F.mse_loss(value_pred.squeeze(), values)
-                loss = policy_loss + 0.5 * value_loss
+            outputs, value_pred = model(inputs)  # raw logits
+            policy_loss = criterion(outputs, labels)
+            value_loss = F.mse_loss(value_pred.squeeze(), values)
+            loss = policy_loss + 0.5 * value_loss
             loss.backward()
             # Gradient clipping
             total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), grad_clip)
@@ -65,9 +64,8 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
             with torch.no_grad():
                 for inputs, labels, values in val_loader:
                     inputs, labels, values = inputs.to(device), labels.to(device), values.to(device)
-                    with autocast(device_type="cuda", dtype=torch.float16):
-                        outputs, value_pred = model(inputs)
-                        val_loss += (criterion(outputs, labels) + 0.5 * F.mse_loss(value_pred.squeeze(), values)).item()
+                    outputs, value_pred = model(inputs)
+                    val_loss += (criterion(outputs, labels) + 0.5 * F.mse_loss(value_pred.squeeze(), values)).item()
 
 
                     # Top-1 accuracy
