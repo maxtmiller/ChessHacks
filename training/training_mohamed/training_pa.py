@@ -24,7 +24,7 @@ def topk_accuracy(output, target, k=3):
         correct = (topk == target_expanded).any(dim=1).float().sum()
         return 100 * correct / target.size(0)
 
-def train(epochs, model, train_loader, val_loader, device, eval_interval=5, lr=1e-4, grad_clip=1.0):
+def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1e-4, grad_clip=1.0):
     """
     MLflow-ready training loop for supervised chess policy network
     """
