@@ -29,6 +29,104 @@ move_to_index = pickle.load(open("./move_to_int.pkl", "rb"))
 
 TEMPERATURE = 1
 
+def evaluate_board(board, model):
+    """
+    Returns the model's value prediction for WHITE in [-1, 1].
+    (Assuming your model is trained to always predict White's score)
+    """
+    mat = board_to_matrix(board)
+    inp = torch.tensor(mat, dtype=torch.float32).unsqueeze(0).to(DEVICE)
+
+    with torch.no_grad():
+        # Your model returns TWO things. We only need the second one.
+        policy_logits, value = model(inp) 
+    
+    return float(value.item())
+
+
+def shallow_search(board, model):
+    """
+    1-ply search using the value head.
+    This is a "minimax" search at depth 1.
+    """
+    legal = list(board.legal_moves)
+    if not legal:
+        return None
+
+    best_move = None
+    best_score = -9999  # We're always trying to maximize this
+
+    # Store whose turn it is *before* we make a move
+    is_white_to_move = (board.turn == chess.WHITE)
+
+    for move in legal:
+        board.push(move)
+        
+        # Get the score of the *resulting* board.
+        # This score is always from White's perspective.
+        white_score = evaluate_board(board, model)
+        
+        board.pop()
+
+        # This is the "negamax" logic.
+        # If we are White, we want to maximize white_score.
+        # If we are Black, we want to minimize white_score (i.e., maximize -white_score).
+        my_score = white_score if is_white_to_move else -white_score
+
+        if my_score > best_score:
+            best_score = my_score
+            best_move = move
+
+    return best_move
+
+@chess_manager.entrypoint
+def test_func(ctx: GameContext):
+    board = ctx.board
+    print("Cooking move... 1-ply value search!")
+    print(board.move_stack)
+
+    # 1. Get all legal moves (for logging)
+    legal_moves = list(board.legal_moves)
+    if not legal_moves:
+        ctx.logProbabilities({})
+        raise ValueError("No legal moves available (probably lost).")
+  
+    # 2. Run your new search function to get the *single* best move
+    best_move = shallow_search(board, model)
+
+    if best_move is None:
+        # Failsafe, though this shouldn't happen if legal_moves is not empty
+        print("Search returned no move. Picking randomly.")
+        best_move = random.choice(legal_moves)
+
+    # 3. Create a "fake" probability map for logging
+    # We give the best move 99% prob and distribute the rest.
+    move_probs = {}
+    
+    # Check for the (unlikely) case of only one legal move
+    if len(legal_moves) == 1:
+        move_probs = {legal_moves[0].uci(): 1.0}
+    else:
+        big = 0.99
+        small = (1.0 - big) / (len(legal_moves) - 1)
+        
+        for move in legal_moves:
+            # FIX: Use string keys (.uci()) for the JSON response
+            if move == best_move:
+                move_probs[move.uci()] = big
+            else:
+                move_probs[move.uci()] = small
+
+    # 4. Log and return
+    ctx.logProbabilities(move_probs)
+
+    print(f"Chosen move: {best_move.uci()}")
+    
+    # FIX: Return the move as a UCI string
+    return best_move.uci()
+
+
+"""
 @chess_manager.entrypoint
 def test_func(ctx: GameContext):
     board = ctx.board
@@ -98,7 +196,7 @@ def test_func(ctx: GameContext):
     )[0]
 
     return best_move
-
+"""
 
 def top_k_moves(normalized_probs: dict, k: int):
     """
