@@ -94,6 +94,18 @@ class ChessDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         return self.X[idx], self.y[idx]
 
+class ChessDatasetPA(torch.utils.data.Dataset):
+    def __init__(self, X, y_policy, y_value):
+        self.X = X
+        self.y_policy = y_policy
+        self.y_value = y_value
+
+    def __len__(self):
+        return len(self.X)
+
+    def __getitem__(self, idx):
+        return self.X[idx], self.y_policy[idx], self.y_value[idx]
+
 
 class PreProcess:
     def __init__(self, x, y, num_classes, move_to_int):
