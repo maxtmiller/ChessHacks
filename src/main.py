@@ -8,20 +8,30 @@ import time
 from .model_pa import ChessResNet, board_to_matrix
 import pickle
 import math
-
+import torch.quantization
 # Write code here that runs once
 # Can do things like load models from huggingface, make connections to subprocesses, etcwenis
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-model = ChessResNet(num_res_blocks=8, num_moves=1917)
+model = ChessResNet(num_res_blocks=4, num_moves=1917)
 
 state_dict = torch.load(
-    "./models/chess_resnet_val_8.pth",
+    "./models/chess_resnet_4.pth",
     map_location=torch.device('cpu')
 )
 
+
+
 model.load_state_dict(state_dict)
+
+
+model = torch.quantization.quantize_dynamic(
+    model,  # your model
+    {torch.nn.Linear, torch.nn.Conv2d},  # layers to quantize
+    dtype=torch.qint8
+)
+
 model.to(DEVICE)
 model.eval()
 

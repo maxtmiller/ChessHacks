@@ -16,6 +16,17 @@ class ResidualBlock(nn.Module):
         out = self.bn2(self.conv2(out))
         out += residual
         return F.relu(out)
+    
+    def fuse_model(self):
+        """
+        Fuse:
+        - conv1 + bn1 + relu1
+        - conv2 + bn2 + relu2
+        """
+        torch.ao.quantization.fuse_modules(self,
+            [['conv1', 'bn1', 'relu1'],
+             ['conv2', 'bn2', 'relu2']],
+            inplace=True)
 
 
 class ChessResNet(nn.Module):
@@ -53,6 +64,30 @@ class ChessResNet(nn.Module):
         value = torch.tanh(self.value_fc2(value))  # output in [-1, 1]
         
         return policy, value
+    
+    def fuse_model(self):
+        # Fuse stem: conv + bn + relu
+        torch.ao.quantization.fuse_modules(
+            self.stem, ['0', '1', '2'], inplace=True
+        )
+
+        # Fuse residual blocks
+        for block in self.res_blocks:
+            block.fuse_model()
+
+        # Fuse policy head: conv + bn + relu
+        torch.ao.quantization.fuse_modules(
+            self,
+            [['policy_conv', 'policy_bn', 'policy_relu']],
+            inplace=True
+        )
+
+        # Fuse value head: conv + bn + relu
+        torch.ao.quantization.fuse_modules(
+            self,
+            [['value_conv', 'value_bn', 'value_relu']],
+            inplace=True
+        )
 
 
 class ChessModel(nn.Module):
@@ -80,3 +115,29 @@ class ChessModel(nn.Module):
         x = self.fc2(x)  # Output raw logits
         return x
     
+model = ChessResNet(num_res_blocks=4, num_moves=1917)
+state_dict = torch.load(
+    r"C:\Users\mahas\ChessHacks\models\chess_resnet_4.pth",
+    map_location=torch.device('cpu')
+)
+
+model.load_state_dict(state_dict)
+model.eval()
+
+model.fuse_model()
+
+# Set quantization config
+model.qconfig = torch.ao.quantization.get_default_qconfig('fbgemm')
+
+# Insert observers
+torch.ao.quantization.prepare(model, inplace=True)
+
+# IMPORTANT: run calibration data here
+# for batch in calibration_loader:
+#     model(batch)
+
+# Convert to int8
+torch.ao.quantization.convert(model, inplace=True)
+
+# Save quantized model
+torch.save(model.state_dict(), "quantized.pth")

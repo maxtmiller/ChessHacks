@@ -100,3 +100,4 @@ class ChessModel(nn.Module):
         x = self.relu(self.fc1(x))
         x = self.fc2(x)  # Output raw logits
         return x
+    
