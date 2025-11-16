@@ -14,10 +14,10 @@ import math
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-model = ChessResNet(num_res_blocks=50, num_moves=1917)
+model = ChessResNet(num_res_blocks=8, num_moves=1917)
 
 state_dict = torch.load(
-    "./models/chess_resnet_100K_50.pth",
+    "./models/chess_resnet_val_8.pth",
     map_location=torch.device('cpu')
 )
 
@@ -45,7 +45,8 @@ def test_func(ctx: GameContext):
     input_tensor = torch.tensor(input_matrix, dtype=torch.float32).unsqueeze(0).to(DEVICE)
 
     with torch.no_grad():
-        logits = model(input_tensor).cpu().numpy().flatten()
+        logits, _ = model(input_tensor)
+        logits = logits.cpu().numpy().flatten()
     
     legal_move_logits = {}
     legal_moves_filtered = []
