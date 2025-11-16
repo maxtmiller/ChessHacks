@@ -106,13 +106,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     X_path = hf_hub_download(
-        repo_id="Maynx/Xy",
+        repo_id="Maynx/Xy2",
         filename="X.pt",
         repo_type="dataset"
     )
 
     y_path = hf_hub_download(
-        repo_id="Maynx/Xy",
+        repo_id="Maynx/Xy2",
         filename="y.pt",
         repo_type="dataset"
     )
