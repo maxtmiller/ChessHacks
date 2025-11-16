@@ -107,16 +107,19 @@ if __name__ == "__main__":
     parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
     parser.add_argument("--model_size", type=int, default=4, help="Number of residual blocks in the model")
     parser.add_argument("--pretrained", type=str, help="Use pretrained model weights", default=None)
+    parser.add_argument("--dataset_option", type=str, help="Dataset option to use", default=0)
     args = parser.parse_args()
 
+
+
     X_path = hf_hub_download(
-        repo_id="Maynx/Xy2",
+        repo_id="Maynx/Xy2" if args.dataset_option == 1 else "Maynx/Xy",
         filename="X.pt",
         repo_type="dataset"
     )
 
     y_path = hf_hub_download(
-        repo_id="Maynx/Xy2",
+        repo_id="Maynx/Xy2" if args.dataset_option == 1 else "Maynx/Xy",
         filename="y.pt",
         repo_type="dataset"
     )
