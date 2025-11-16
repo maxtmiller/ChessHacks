@@ -63,11 +63,11 @@ def train(epochs, model, train_loader, val_loader, device, eval_interval=1, lr=1
             model.eval()
             val_loss, correct, total, top3_correct = 0.0, 0, 0, 0
             with torch.no_grad():
-                for inputs, labels in val_loader:
-                    inputs, labels = inputs.to(device), labels.to(device)
+                for inputs, labels, values in val_loader:
+                    inputs, labels, values = inputs.to(device), labels.to(device), values.to(device)
                     with autocast(device_type="cuda", dtype=torch.float16):
-                        outputs = model(inputs)
-                    val_loss += criterion(outputs, labels).item()
+                        outputs, value_pred = model(inputs)
+                        val_loss += (criterion(outputs, labels) + 0.5 * F.mse_loss(value_pred.squeeze(), values)).item()
 
 
                     # Top-1 accuracy
