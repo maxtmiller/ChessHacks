@@ -115,29 +115,3 @@ class ChessModel(nn.Module):
         x = self.fc2(x)  # Output raw logits
         return x
     
-model = ChessResNet(num_res_blocks=4, num_moves=1917)
-state_dict = torch.load(
-    r"C:\Users\mahas\ChessHacks\models\chess_resnet_4.pth",
-    map_location=torch.device('cpu')
-)
-
-model.load_state_dict(state_dict)
-model.eval()
-
-model.fuse_model()
-
-# Set quantization config
-model.qconfig = torch.ao.quantization.get_default_qconfig('fbgemm')
-
-# Insert observers
-torch.ao.quantization.prepare(model, inplace=True)
-
-# IMPORTANT: run calibration data here
-# for batch in calibration_loader:
-#     model(batch)
-
-# Convert to int8
-torch.ao.quantization.convert(model, inplace=True)
-
-# Save quantized model
-torch.save(model.state_dict(), "quantized.pth")
