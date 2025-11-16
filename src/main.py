@@ -16,14 +16,14 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 model = ChessResNet(num_res_blocks=40, num_moves=1917)
 
 state_dict = torch.load(
-    "/Users/maxmiller/Documents/GitHub/ChessHacks/models/chess_resnet_40.pth",
+    "./models/chess_resnet_40.pth",
     map_location=torch.device('cpu')
 )
 
 model.load_state_dict(state_dict)
 model.eval()
 
-move_to_index = pickle.load(open("/Users/maxmiller/Documents/GitHub/ChessHacks/src/move_to_int.pkl", "rb"))
+move_to_index = pickle.load(open("./move_to_int.pkl", "rb"))
 
 
 @chess_manager.entrypoint
