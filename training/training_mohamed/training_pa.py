@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import time
 import tqdm
-from model import ChessResNet, ChessModel
+from model_pa import ChessResNet, ChessModel
 import torch.nn as nn
 from preprocessing import preprocess_data, ChessDataset, ChessDatasetPA
 from torch.utils.data import DataLoader
