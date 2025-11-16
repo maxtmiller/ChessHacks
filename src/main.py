@@ -5,7 +5,7 @@ import chess
 import chess.engine
 import random
 import time
-from .model import ChessResNet, board_to_matrix
+from .model_pa import ChessResNet, board_to_matrix
 import pickle
 import math
 
