@@ -81,50 +81,49 @@ def shallow_search(board, model):
 
 @chess_manager.entrypoint
 def test_func(ctx: GameContext):
-    board = ctx.board
-    print("Cooking move... 1-ply value search!")
-    print(board.move_stack)
+    try:
+        # --- YOUR ORIGINAL CODE STARTS HERE ---
+        board = ctx.board
+        print("Cooking move... 1-ply value search!")
+        print(board.move_stack)
 
-    # 1. Get all legal moves (for logging)
-    legal_moves = list(board.legal_moves)
-    if not legal_moves:
-        ctx.logProbabilities({})
-        raise ValueError("No legal moves available (probably lost).")
-  
-    # 2. Run your new search function to get the *single* best move
-    best_move = shallow_search(board, model)
-
-    if best_move is None:
-        # Failsafe, though this shouldn't happen if legal_moves is not empty
-        print("Search returned no move. Picking randomly.")
-        best_move = random.choice(legal_moves)
-
-    # 3. Create a "fake" probability map for logging
-    # We give the best move 99% prob and distribute the rest.
-    move_probs = {}
-    
-    # Check for the (unlikely) case of only one legal move
-    if len(legal_moves) == 1:
-        move_probs = {legal_moves[0].uci(): 1.0}
-    else:
-        big = 0.99
-        small = (1.0 - big) / (len(legal_moves) - 1)
+        # 1. Get all legal moves (for logging)
+        legal_moves = list(board.legal_moves)
+        if not legal_moves:
+            ctx.logProbabilities({})
+            raise ValueError("No legal moves available (probably lost).")
         
-        for move in legal_moves:
-            # FIX: Use string keys (.uci()) for the JSON response
-            if move == best_move:
-                move_probs[move.uci()] = big
-            else:
-                move_probs[move.uci()] = small
+        # 2. Run your new search function to get the *single* best move
+        print("--- DEBUG: Calling shallow_search ---")
+        best_move = shallow_search(board, model)
+        print(f"--- DEBUG: shallow_search returned {best_move} ---")
 
-    # 4. Log and return
-    ctx.logProbabilities(move_probs)
+        if best_move is None:
+            # Failsafe
+            print("Search returned no move. Picking randomly.")
+            best_move = random.choice(legal_moves)
 
-    print(f"Chosen move: {best_move.uci()}")
+        # 3. Create a "fake" probability map for logging
+        ctx.logProbabilities({})
+
+        print(f"Chosen move: {best_move.uci()}")
+        print(best_move, type(best_move))
+        return best_move
     
-    # FIX: Return the move as a UCI string
-    return best_move.uci()
-
+    except Exception as e:
+        # --- THIS IS THE DEBUGGING PART ---
+        print("!!!!!!!!!!!!!! ERROR IN TEST_FUNC !!!!!!!!!!!!!!")
+        print(f"Exception Type: {type(e)}")
+        print(f"Exception Args: {e.args}")
+        
+        # This prints the full traceback to your console
+        import traceback
+        traceback.print_exc()
+        
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        
+        # Re-raise the exception so the server still fails
+        raise e
 
 """
 @chess_manager.entrypoint
