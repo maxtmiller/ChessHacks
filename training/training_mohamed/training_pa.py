@@ -116,19 +116,19 @@ if __name__ == "__main__":
 
 
     X_path = hf_hub_download(
-        repo_id="Maynx/Xy3" if args.dataset_option == 1 else "Maynx/Xy",
+        repo_id="Maynx/Xy3",
         filename="X.pt",
         repo_type="dataset"
     )
 
     y_path = hf_hub_download(
-        repo_id="Maynx/Xy3" if args.dataset_option == 1 else "Maynx/Xy",
+        repo_id="Maynx/Xy3",
         filename="y.pt",
         repo_type="dataset"
     )
 
     y_value_path = hf_hub_download(
-        repo_id="Maynx/Xy3" if args.dataset_option == 1 else "Maynx/Xy",
+        repo_id="Maynx/Xy3",
         filename="y_value.pt",
         repo_type="dataset"
     )
