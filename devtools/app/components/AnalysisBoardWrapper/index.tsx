@@ -6,15 +6,15 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 const models = [
-  { "file_name": "chess_resnet_op_bots_8.pth", "display_name": "8-Layer B-P", },
-  { "file_name": "chess_resnet_op_bots_12.pth", "display_name": "12-Layer B-P", },
-  { "file_name": "chess_resnet_op_bots_24.pth", "display_name": "24-Layer B-P", },
-  { "file_name": "chess_resnet_op_bots_40.pth", "display_name": "40-Layer B-P", },
-  { "file_name": "chess_resnet_op_elite_15.pth", "display_name": "15-Layer E-P", },
-  { "file_name": "chess_resnet_op_elite_50.pth", "display_name": "50-Layer E-P", },
+  // { "file_name": "chess_resnet_op_bots_8.pth", "display_name": "8-Layer B-P", },
+  // { "file_name": "chess_resnet_op_bots_12.pth", "display_name": "12-Layer B-P", },
+  // { "file_name": "chess_resnet_op_bots_24.pth", "display_name": "24-Layer B-P", },
+  // { "file_name": "chess_resnet_op_bots_40.pth", "display_name": "40-Layer B-P", },
+  // { "file_name": "chess_resnet_op_elite_15.pth", "display_name": "15-Layer E-P", },
+  // { "file_name": "chess_resnet_op_elite_50.pth", "display_name": "50-Layer E-P", },
   { "file_name": "chess_resnet_pv_elite_1.pth", "display_name": "1-Layer E-PV", },
-  { "file_name": "chess_resnet_pv_elite_8.pth", "display_name": "8-Layer E-PV", },
-  { "file_name": "chess_resnet_pv_elite_full_4.pth", "display_name": "4-Layer E-PV", },
+  // { "file_name": "chess_resnet_pv_elite_8.pth", "display_name": "8-Layer E-PV", },
+  // { "file_name": "chess_resnet_pv_elite_full_4.pth", "display_name": "4-Layer E-PV", },
   // { "file_name": "chess_resnet_pv_elite_half_4.pth", "display_name": "4-Layer E-PV-H", },
 ];
 
@@ -264,7 +264,7 @@ export default function AnalysisBoardWrapper() {
                         </MenuButton>
                         <MenuItems
                           transition
-                          className="!absolute !left-0 !z-10 !mt-2 !w-56 !origin-top-right !rounded-md !border-[var(--dark-border)] !bg-[var(--nameplate-bg)] !outline-1 !-outline-offset-1 !outline-white/10 !transition !data-closed:scale-95 !data-closed:transform !data-closed:opacity-0 !data-enter:duration-100 !data-enter:ease-out !data-leave:duration-75 !data-leave:ease-in"
+                          className="!absolute !left-0 !z-10000 !mt-2 !w-56 !origin-top-right !rounded-md !border-[var(--dark-border)] !bg-[var(--nameplate-bg)] !outline-1 !-outline-offset-1 !outline-white/10 !transition !data-closed:scale-95 !data-closed:transform !data-closed:opacity-0 !data-enter:duration-100 !data-enter:ease-out !data-leave:duration-75 !data-leave:ease-in"
                         >
                           <div className="py-1">
                             {models.map((model) => (
