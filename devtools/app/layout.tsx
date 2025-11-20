@@ -13,8 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chess",
-  description: "Play our slef-trained chess engines"
+  title: "AlphaPoisson",
+  description: "Battle against our self-trained AI chess engines—crafted by the Échec et mat du poisson team.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

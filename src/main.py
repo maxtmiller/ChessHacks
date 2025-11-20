@@ -4,18 +4,13 @@ from chess import Move
 import chess
 import chess.engine
 import random
-from .model_pa import ChessResNetPa
-from .model import ChessResNet, board_to_matrix
+from .model import ChessResNet, ChessResNetPa, board_to_matrix
 import pickle
 
-
-# Write code here that runs once
-# Can do things like load models from huggingface, make connections to subprocesses, etcwenis
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 TEMPERATURE = 1
 
-# model_name="chess_resnet_pv_elite_1.pth"
 
 @chess_manager.entrypoint
 def test_func(ctx: GameContext):        
@@ -47,7 +42,7 @@ def test_func(ctx: GameContext):
             model.load_state_dict(state_dict)
             model.to(DEVICE)
             model.eval()
-            move_to_index = pickle.load(open("./move_to_int.pkl", "rb"))
+            move_to_index = pickle.load(open("./src/move_to_int.pkl", "rb"))
         
             # 2. Run your new search function to get the *single* best move
             best_move = shallow_search(board, model)
@@ -72,7 +67,7 @@ def test_func(ctx: GameContext):
             )
             model.load_state_dict(state_dict)
             model.eval()
-            move_to_index = pickle.load(open("./move_to_int.pkl", "rb"))
+            move_to_index = pickle.load(open("./src/move_to_int.pkl", "rb"))
 
             # 2. Convert board to tensor
             input_matrix = board_to_matrix(board)

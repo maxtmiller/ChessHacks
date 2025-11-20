@@ -27,8 +27,6 @@ async def get_move(request: Request):
     if ("pgn" not in data or "timeleft" not in data or "model_name" not in data):
         return JSONResponse(content={"error": "Missing pgn or timeleft"}, status_code=400)
 
-    # print(data)
-
     pgn = data["pgn"]
     timeleft = data["timeleft"]  # in milliseconds
     model_name = data["model_name"]
