@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 class GameContext:
     board: Board
     timeLeft: int  # in milliseconds
+    model_name: str
     logProbabilities: Callable[[dict[Move, float]], None]
 
 
@@ -22,6 +23,7 @@ class ChessManager:
         self._ctx = GameContext(
             board=Board(),
             timeLeft=0,
+            model_name="chess_resnet_pv_elite_1.pth",
             logProbabilities=self.update_move_probabilities,
         )
         self._func = None
@@ -61,7 +63,7 @@ class ChessManager:
 
         return wrapper
 
-    def set_context(self, pgn: str, timeleft: int):
+    def set_context(self, pgn: str, timeleft: int, model_name: str):
 
         game = read_game(io.StringIO(pgn))
 
@@ -76,6 +78,7 @@ class ChessManager:
         self._ctx = GameContext(
             board=board_at_end,
             timeLeft=timeleft,
+            model_name=model_name,
             logProbabilities=self.update_move_probabilities,
         )
 

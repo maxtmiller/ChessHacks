@@ -2,6 +2,22 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Script from "next/script";
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+
+const models = [
+  { "file_name": "chess_resnet_op_bots_8.pth", "display_name": "8-Layer B-P", },
+  { "file_name": "chess_resnet_op_bots_12.pth", "display_name": "12-Layer B-P", },
+  { "file_name": "chess_resnet_op_bots_24.pth", "display_name": "24-Layer B-P", },
+  { "file_name": "chess_resnet_op_bots_40.pth", "display_name": "40-Layer B-P", },
+  { "file_name": "chess_resnet_op_elite_15.pth", "display_name": "15-Layer E-P", },
+  { "file_name": "chess_resnet_op_elite_50.pth", "display_name": "50-Layer E-P", },
+  { "file_name": "chess_resnet_pv_elite_1.pth", "display_name": "1-Layer E-PV", },
+  { "file_name": "chess_resnet_pv_elite_8.pth", "display_name": "8-Layer E-PV", },
+  { "file_name": "chess_resnet_pv_elite_full_4.pth", "display_name": "4-Layer E-PV", },
+  // { "file_name": "chess_resnet_pv_elite_half_4.pth", "display_name": "4-Layer E-PV-H", },
+];
+
 
 export default function AnalysisBoardWrapper() {
   const [scriptsLoaded, setScriptsLoaded] = useState({
@@ -15,6 +31,8 @@ export default function AnalysisBoardWrapper() {
   const [engineError, setEngineError] = useState<string | null>(null);
   const [reloadStatus, setReloadStatus] = useState<string | null>(null);
   const lastRestartAtRef = useRef<number | null>(null);
+
+  const [selectedName, setSelectedName] = useState<string>("1-Layer E-PV");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -189,13 +207,6 @@ export default function AnalysisBoardWrapper() {
   return (
     <div className="h-full w-full grid place-items-center">
       <div>
-        <div className="text-center mb-4">
-          <p className="font-bold">ChessHacks Devtools</p>
-          <p>
-            See <span className="text-sm p-1 rounded font-mono">README.md</span>{" "}
-            for further instructions
-          </p>
-        </div>
         {engineError && (
           <div className="mb-4 rounded border border-red-500 bg-red-950 px-3 py-2 text-sm text-red-200">
             {engineError}
@@ -231,14 +242,10 @@ export default function AnalysisBoardWrapper() {
           ref={boardContainerRef}
           className="analysis-board-container dark_theme"
         >
-          <div className="mb-4 flex gap-2 items-center min-h-[1.5rem]"></div>
-          <button
-            className="underline cursor-pointer disabled:opacity-50"
-            disabled={reloading}
-            onClick={handleReloadClick}
-          >
-            {reloading ? "Reloading /src..." : "Reload /src"}
-          </button>
+          <div className="text-center mb-4">
+            <h1 className="text-2xl font-bold">Play Our Chess Engine Models @ ChessHacks</h1>
+          </div>
+          <div className="mb-4 flex gap-2 items-center min-h-[1rem]"></div>
           {reloadStatus && (
             <span className="ml-2 text-xs text-green-400">{reloadStatus}</span>
           )}
@@ -249,9 +256,40 @@ export default function AnalysisBoardWrapper() {
                 <div className="chess-container">
                   <div className="nameplate top">
                     <div className="profile">
-                      <h4 id="black-name" className="name">
-                        Black
-                      </h4>
+                      Bot: 
+                      <Menu as="div" className="relative">
+                        <MenuButton className="!flex !w-full !justify-center !gap-x-1.5 !rounded-md !bg-white/10 !px-3 !py-2 !text-sm !font-semibold !text-white !inset-ring-1 !inset-ring-white/5 !hover:bg-white/20">
+                          {/* Display the currently selected model's name */}
+                          <h4 id="model-name"> {selectedName} </h4> 
+                          <ChevronDownIcon aria-hidden="true" className="!-mr-1 !size-5 !text-gray-400" />
+                        </MenuButton>
+
+                        <MenuItems
+                          transition
+                          className="!absolute !left-0 !z-10 !mt-2 !w-56 !origin-top-right !rounded-md !border-[var(--dark-border)] !bg-[var(--nameplate-bg)] !outline-1 !-outline-offset-1 !outline-white/10 !transition !data-closed:scale-95 !data-closed:transform !data-closed:opacity-0 !data-enter:duration-100 !data-enter:ease-out !data-leave:duration-75 !data-leave:ease-in"
+                        >
+                          <div className="py-1">
+                            {/* Map over the models array to create a MenuItem for each model */}
+                            {models.map((model) => (
+                              <MenuItem key={model.file_name}>
+                                {/* The button is preferred for action items within Headless UI menus */}
+                                <button 
+                                  // You would typically use the model's file_name to trigger the selection logic
+                                  onClick={() => {
+                                    setSelectedName(model.display_name);
+                                    (window as any).setSelectedModel(model.file_name);
+                                    console.log("Model selected:", model.file_name);
+                                  }}
+                                  className="!block !w-full !px-4 !py-2 !text-left !text-sm !text-gray-300 !data-focus:bg-white/5 !data-focus:text-white !data-focus:outline-hidden"
+                                >
+                                  {/* Use the display_name for the text shown in the menu */}
+                                  {model.display_name} 
+                                </button>
+                              </MenuItem>
+                            ))}
+                          </div>
+                        </MenuItems>
+                      </Menu>
                     </div>
                     <div className="clock" id="black-clock">
                       <span className="clock-time">--:--</span>

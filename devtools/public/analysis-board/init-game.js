@@ -7,6 +7,18 @@ import { DebugInformation } from "./src/components/debug/DebugInformation.js";
 window.initAnalysisBoard = async function (gameData) {
   const chessUI = new ChessUI();
   const game = GameLoader.loadGameFromPGN(gameData.pgn);
+  let model_name = "chess_resnet_pv_elite_1.pth"
+  
+  window.selectedModel = null;
+  window.setSelectedModel = function(modelName) {
+    selectedModel = modelName;
+    window.selectedModel = modelName;
+    model_name = modelName
+    console.log("Model updated:", modelName);
+  };
+
+  
+
 
   game.white.name = gameData.white.name;
   game.black.name = gameData.black.name;
@@ -52,7 +64,7 @@ window.initAnalysisBoard = async function (gameData) {
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ pgn, timeleft })
+          body: JSON.stringify({ pgn, timeleft, model_name })
         });
 
         if (!res.ok) {

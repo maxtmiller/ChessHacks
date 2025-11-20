@@ -24,14 +24,18 @@ async def get_move(request: Request):
     except Exception as e:
         return JSONResponse(content={"error": "Missing pgn or timeleft"}, status_code=400)
 
-    if ("pgn" not in data or "timeleft" not in data):
+    if ("pgn" not in data or "timeleft" not in data or "model_name" not in data):
         return JSONResponse(content={"error": "Missing pgn or timeleft"}, status_code=400)
+
+    # print(data)
 
     pgn = data["pgn"]
     timeleft = data["timeleft"]  # in milliseconds
+    model_name = data["model_name"]
 
-    chess_manager.set_context(pgn, timeleft)
+    chess_manager.set_context(pgn, timeleft, model_name)
     print("pgn", pgn)
+    print("model_name", model_name)
 
     try:
         start_time = time.perf_counter()

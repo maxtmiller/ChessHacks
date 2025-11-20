@@ -12,17 +12,13 @@ import pickle
 # Can do things like load models from huggingface, make connections to subprocesses, etcwenis
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-
 model = ChessResNet(num_res_blocks=12, num_moves=1917)
-
 state_dict = torch.load(
     "./models/chess_resnet_12.pth",
     map_location=torch.device('cpu')
 )
-
 model.load_state_dict(state_dict)
 model.eval()
-
 move_to_index = pickle.load(open("./move_to_int.pkl", "rb"))
 
 
@@ -30,7 +26,7 @@ move_to_index = pickle.load(open("./move_to_int.pkl", "rb"))
 def test_func(ctx: GameContext):
     board = ctx.board
 
-    print("Cooking move...main2")
+    print("Cooking move...")
     print(board.move_stack)
 
     # 1. Get legal moves
@@ -81,11 +77,6 @@ def test_func(ctx: GameContext):
 
     # 6. Log probabilities and choose move
     ctx.logProbabilities(normalized_probs)
-    # best_move = random.choices(
-    #     legal_moves_filtered, weights=[p for p in normalized_probs.values()], k=1
-    # )[0]
-
-    print("top k")
 
     # Top K
     K = 3

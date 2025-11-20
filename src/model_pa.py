@@ -5,7 +5,6 @@ from chess import Board
 import numpy as np
 
 
-
 def board_to_matrix(board: Board):
     matrix = np.zeros((13, 8, 8))
     piece_map = board.piece_map()
@@ -39,7 +38,7 @@ class ResidualBlock(nn.Module):
         return F.relu(out)
 
 
-class ChessResNet(nn.Module):
+class ChessResNetPa(nn.Module):
     def __init__(self, num_res_blocks=4, num_moves=4672):
         super().__init__()
         self.stem = nn.Sequential(
