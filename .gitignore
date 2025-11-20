@@ -6,4 +6,3 @@ venv
 /devtools/.next
 /devtools/node_modules
 /training/training_data
-/training/training_data.csv
