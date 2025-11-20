@@ -1,7 +1,6 @@
 # **AlphaPoisson**
 
-AlphaPoisson is a collection of self-trained AI chess engines developed during **ChessHacks 2025** by the team *Échec et mat du poisson*.  
-Our goal was to explore how far lightweight, custom-trained models can go using a mix of self-play, handcrafted evaluation heuristics, and iterative refinement.
+AlphaPoisson is a collection of self-trained AI chess engines developed during **ChessHacks 2025** by our team *Échec et mat du poisson*. Our goal was to explore how far lightweight, custom-trained models can go using a mix of self-play, handcrafted evaluation heuristics, and iterative refinement.
 
 ---
 
