@@ -6,8 +6,7 @@ AlphaPoisson is a collection of self-trained AI chess engines developed during *
 
 ## 🚀 Overview
 
-AlphaPoisson features multiple chess engines trained under different configurations, each with its own style and strengths.  
-You can play against them directly on our website or explore the source code to see how each engine was built.
+AlphaPoisson features multiple chess engines trained under different configurations, each with its own style and strengths. You can play against them directly on our website or explore the source code to see how each engine was built.
 
 Key ideas behind the project include:
 
