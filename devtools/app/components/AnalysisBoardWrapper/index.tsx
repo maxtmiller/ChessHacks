@@ -6,16 +6,15 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 const models = [
-  // { "file_name": "chess_resnet_op_bots_8.pth", "display_name": "8-Layer B-P", },
-  // { "file_name": "chess_resnet_op_bots_12.pth", "display_name": "12-Layer B-P", },
-  // { "file_name": "chess_resnet_op_bots_24.pth", "display_name": "24-Layer B-P", },
-  // { "file_name": "chess_resnet_op_bots_40.pth", "display_name": "40-Layer B-P", },
-  // { "file_name": "chess_resnet_op_elite_15.pth", "display_name": "15-Layer E-P", },
-  // { "file_name": "chess_resnet_op_elite_50.pth", "display_name": "50-Layer E-P", },
+  { "file_name": "chess_resnet_op_bots_8.pth", "display_name": "8-Layer B-P", },
+  { "file_name": "chess_resnet_op_bots_12.pth", "display_name": "12-Layer B-P", },
+  { "file_name": "chess_resnet_op_bots_24.pth", "display_name": "24-Layer B-P", },
+  { "file_name": "chess_resnet_op_bots_40.pth", "display_name": "40-Layer B-P", },
+  { "file_name": "chess_resnet_op_elite_15.pth", "display_name": "15-Layer E-P", },
+  { "file_name": "chess_resnet_op_elite_50.pth", "display_name": "50-Layer E-P", },
   { "file_name": "chess_resnet_pv_elite_1.pth", "display_name": "1-Layer E-PV", },
-  // { "file_name": "chess_resnet_pv_elite_8.pth", "display_name": "8-Layer E-PV", },
-  // { "file_name": "chess_resnet_pv_elite_full_4.pth", "display_name": "4-Layer E-PV", },
-  // { "file_name": "chess_resnet_pv_elite_half_4.pth", "display_name": "4-Layer E-PV-H", },
+  { "file_name": "chess_resnet_pv_elite_8.pth", "display_name": "8-Layer E-PV", },
+  { "file_name": "chess_resnet_pv_elite_4.pth", "display_name": "4-Layer E-PV", },
 ];
 
 
